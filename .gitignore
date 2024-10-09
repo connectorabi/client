@@ -112,7 +112,5 @@ dist
 .tern-port
 
 installer/**/*.exe
-installer/**/*.zip
+# installer/**/*.zip
 
-
-!installer/win64/connectorjs-client-setup.zip

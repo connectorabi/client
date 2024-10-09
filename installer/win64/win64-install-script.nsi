@@ -4,14 +4,14 @@
 !include "MUI2.nsh"
 Icon "img\connector.ico"
 
-Name "Connector Client"
+Name "ConnectorAbi"
 
-OutFile "connectorclient-setup.exe"
+OutFile "connectorabi-setup.exe"
 
-InstallDir "$APPDATA\ConnectorClient"
-;InstallDir "$PROGRAMFILES\ConnectorClient"
+InstallDir "$APPDATA\ConnectorAbi"
+;InstallDir "$PROGRAMFILES\ConnectorAbi"
 
-InstallDirRegKey HKLM "Software\ConnectorClient" "Install_Dir"
+InstallDirRegKey HKLM "Software\ConnectorAbi" "Install_Dir"
 
 
 RequestExecutionLevel admin
@@ -56,29 +56,29 @@ Section "install"
   File /r "nssm.exe"
   
 
-  File /r /x ".env*" /x "installer"  /x ".*" "..\..\client\*.*"
+  File /r /x ".env*" /x "installer" /x "docs"  /x ".*" "..\..\*.*"
 
   SetOutPath $INSTDIR\img
   File /r "img\*.ico"
   
   SetOutPath $INSTDIR
   
-  WriteRegStr HKLM "Software\ConnectorClient" "Install_Dir" "$INSTDIR"
+  WriteRegStr HKLM "Software\ConnectorAbi" "Install_Dir" "$INSTDIR"
   
   ; Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorClient" "DisplayName" "ConnectorClient"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorClient" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorClient" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorClient" "NoRepair" 1
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorAbi" "DisplayName" "ConnectorAbi"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorAbi" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorAbi" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorAbi" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
   
-  CreateDirectory "$SMPROGRAMS\ConnectorClient\"
-  CreateShortcut "$SMPROGRAMS\ConnectorClient\Connector Start.lnk" "$INSTDIR\node.exe" "cli.js start" "$INSTDIR\img\database.ico"
-  CreateShortcut "$SMPROGRAMS\ConnectorClient\Client User Information.lnk" "$INSTDIR\node.exe" "cli.js show" "$INSTDIR\img\connector.ico"
-  CreateShortcut "$SMPROGRAMS\ConnectorClient\Renew Password.lnk" "$INSTDIR\node.exe" "cli.js renewpass" "$INSTDIR\img\shield.ico"
-  CreateShortcut "$SMPROGRAMS\ConnectorClient\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+  CreateDirectory "$SMPROGRAMS\ConnectorAbi\"
+  CreateShortcut "$SMPROGRAMS\ConnectorAbi\Connector Start.lnk" "$INSTDIR\node.exe" "cli.js start" "$INSTDIR\img\database.ico"
+  CreateShortcut "$SMPROGRAMS\ConnectorAbi\Client User Information.lnk" "$INSTDIR\node.exe" "cli.js show" "$INSTDIR\img\connector.ico"
+  CreateShortcut "$SMPROGRAMS\ConnectorAbi\Renew Password.lnk" "$INSTDIR\node.exe" "cli.js renewpass" "$INSTDIR\img\shield.ico"
+  CreateShortcut "$SMPROGRAMS\ConnectorAbi\Uninstall.lnk" "$INSTDIR\uninstall.exe"
   ;create desktop shortcut
-  CreateShortCut "$DESKTOP\ConnectorClient.lnk" "$INSTDIR\node.exe" "cli.js show" "$INSTDIR\img\connector.ico"
+  CreateShortCut "$DESKTOP\ConnectorAbi.lnk" "$INSTDIR\node.exe" "cli.js show" "$INSTDIR\img\connector.ico"
 
 SectionEnd
 
@@ -86,22 +86,22 @@ SectionEnd
 Section "Uninstall"
   
   ; Remove registry keys
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorClient"
-  DeleteRegKey HKLM "SOFTWARE\ConnectorClient"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ConnectorAbi"
+  DeleteRegKey HKLM "SOFTWARE\ConnectorAbi"
 
   ExpandEnvStrings $0 %COMSPEC%
-  ExecWait '"$INSTDIR\nssm.exe" stop "ConnectorClient"'
-  ExecWait '"$INSTDIR\nssm.exe" remove "ConnectorClient" confirm'
+  ExecWait '"$INSTDIR\nssm.exe" stop "ConnectorAbi"'
+  ExecWait '"$INSTDIR\nssm.exe" remove "ConnectorAbi" confirm'
 
 
   Delete $INSTDIR\*.*
 
   ; Remove shortcuts, if any
-  Delete "$SMPROGRAMS\ConnectorClient\*.*"
-  Delete "$DESKTOP\ConnectorClient.lnk"
+  Delete "$SMPROGRAMS\ConnectorAbi\*.*"
+  Delete "$DESKTOP\ConnectorAbi.lnk"
 
   ; Remove directories used
-  RMDir "$SMPROGRAMS\ConnectorClient"
+  RMDir "$SMPROGRAMS\ConnectorAbi"
   RMDir /r "$INSTDIR"
 
 SectionEnd
@@ -110,14 +110,14 @@ SectionEnd
 Function installServices
   
   ExpandEnvStrings $0 %COMSPEC%
-  Exec '"$INSTDIR\nssm.exe" install "ConnectorClient"  "$INSTDIR\node.exe" "connector.js"'
-  Exec '"$INSTDIR\nssm.exe" set "ConnectorClient" AppParameters "connector.js"'
-  Exec '"$INSTDIR\nssm.exe" set "ConnectorClient" AppDirectory $INSTDIR\'
-  Exec '"$INSTDIR\nssm.exe" set "ConnectorClient" AppStdout $INSTDIR\log.log'
-  Exec '"$INSTDIR\nssm.exe" set "ConnectorClient" AppStderr $INSTDIR\error.log'
-  Exec '"$INSTDIR\nssm.exe" set "ConnectorClient" AppStopMethodSkip 6'
-  Exec '"$INSTDIR\nssm.exe" set "ConnectorClient" AppStopMethodConsole 1000'
-  Exec '"$INSTDIR\nssm.exe" set "ConnectorClient" AppThrottle 5000'
-  Exec '"$INSTDIR\nssm.exe" start "ConnectorClient"'
+  Exec '"$INSTDIR\nssm.exe" install "ConnectorAbi"  "$INSTDIR\node.exe" "connector.js"'
+  Exec '"$INSTDIR\nssm.exe" set "ConnectorAbi" AppParameters "connector.js"'
+  Exec '"$INSTDIR\nssm.exe" set "ConnectorAbi" AppDirectory $INSTDIR\'
+  Exec '"$INSTDIR\nssm.exe" set "ConnectorAbi" AppStdout $INSTDIR\log.log'
+  Exec '"$INSTDIR\nssm.exe" set "ConnectorAbi" AppStderr $INSTDIR\error.log'
+  Exec '"$INSTDIR\nssm.exe" set "ConnectorAbi" AppStopMethodSkip 6'
+  Exec '"$INSTDIR\nssm.exe" set "ConnectorAbi" AppStopMethodConsole 1000'
+  Exec '"$INSTDIR\nssm.exe" set "ConnectorAbi" AppThrottle 5000'
+  Exec '"$INSTDIR\nssm.exe" start "ConnectorAbi"'
 
 FunctionEnd
