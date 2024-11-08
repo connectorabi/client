@@ -1,6 +1,6 @@
 {
   "name": "connectorabi-client",
-  "version": "2.0.9",
+  "version": "2.1.0",
   "description": "Establish easy and secure remote connection to your local databases, files, etc.",
   "main": "connectorjs-client.js",
   "scripts": {
