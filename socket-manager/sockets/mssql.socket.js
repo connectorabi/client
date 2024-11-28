@@ -1,6 +1,11 @@
 module.exports = (socket, params) => {
 	try {
 		const sql = require('mssql')
+		if (params.config) {
+			params.config.connectionTimeout = 180000
+			params.config.requestTimeout = 180000
+		}
+
 		sql.connect(params.config)
 			.then(pool => {
 				if (params.query) {
