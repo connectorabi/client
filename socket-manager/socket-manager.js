@@ -5,12 +5,7 @@ var reconnectionCount = 1
 const reconnectionInterval = () => {
   let interval = Number(process.env.RECONNECTION_INTERVAL || 30000)
   return interval
-  let t = interval * reconnectionCount++
-  let limit = 20 * 60 * 1000 // 20min
-  if (t > limit) {
-    t = limit
-  }
-  return t
+
 }
 
 let osInfo = util.osBaseInfo()
@@ -47,10 +42,10 @@ global.sendError = (err, callback) => {
     event: 'callback',
     success: false,
     error: error,
-    callback:callback || ''
+    callback: callback || ''
   }
-  console.log(`obj`, obj )
-  if(global.ws.readyState === WebSocket.OPEN)
+  console.log(`obj`, obj)
+  if (global.ws.readyState === WebSocket.OPEN)
     global.ws.send(JSON.stringify(obj))
 }
 
@@ -60,9 +55,9 @@ global.sendSuccess = (data, callback) => {
     event: 'callback',
     success: true,
     data: data,
-    callback:callback || ''
+    callback: callback || ''
   }
-  if(global.ws.readyState === WebSocket.OPEN)
+  if (global.ws.readyState === WebSocket.OPEN)
     global.ws.send(JSON.stringify(obj))
 
 }
@@ -75,7 +70,7 @@ function connectServer() {
 
     global.ws = new WebSocket(url)
 
-    
+
 
 
     ws.on('open', () => {
@@ -94,7 +89,7 @@ function connectServer() {
       }
 
     })
-    
+
 
     ws.on('message', (rawData) => {
       if (rawData) {
@@ -112,7 +107,10 @@ function connectServer() {
       }
     })
 
-    ws.on('ping', () => ws.pong())
+    ws.on('ping', () => {
+      ws.pong()
+      devLog('pong gonderildi')
+    })
 
     ws.on('error', (err) => {
       errorLog('hata', err.name, err.message)
