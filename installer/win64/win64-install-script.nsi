@@ -8,6 +8,8 @@ Name "ConnectorAbi"
 
 OutFile "connectorabi-setup.exe"
 
+
+
 InstallDir "$APPDATA\ConnectorAbi"
 ;InstallDir "$PROGRAMFILES\ConnectorAbi"
 
