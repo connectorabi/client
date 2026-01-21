@@ -8,7 +8,9 @@ const path = require('path')
 
 global.util = require(path.join(__root, 'lib', 'util'))
 
-const args = require('yargs').argv
+const yargs = require('yargs/yargs')
+const { hideBin } = require('yargs/helpers')
+const args = yargs(hideBin(process.argv)).argv
 
 if (args.h || args.help) {
   showHelp()
